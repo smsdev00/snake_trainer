@@ -97,7 +97,7 @@ fn export_model(agent: &DQNAgent, filename: &str) {
                     "class_name": "Dense",
                     "config": {
                         "units": 256, "activation": "relu", "use_bias": true,
-                        "name": "dense", "batch_input_shape": [null, 22],
+                        "name": "dense", "batch_input_shape": [null, 28],
                         "dtype": "float32"
                     }
                 },
@@ -145,7 +145,7 @@ fn main() {
 
     println!("=== Snake DQN Trainer (Rust) ===");
     println!(
-        "Grid: {}x{} | MLP 22→256→64→4 | Episodes: {}",
+        "Grid: {}x{} | MLP 28→256→64→4 | Episodes: {} | gamma=0.99 eps_decay=0.998",
         GRID_SIZE, GRID_SIZE, num_episodes
     );
     println!(

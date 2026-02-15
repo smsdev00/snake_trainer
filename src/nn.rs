@@ -1,6 +1,6 @@
 use rand::Rng;
 
-pub const INPUT_SIZE: usize = 22;
+pub const INPUT_SIZE: usize = 28;
 const HIDDEN1: usize = 256;
 const HIDDEN2: usize = 64;
 pub const OUTPUT_SIZE: usize = 4;

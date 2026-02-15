@@ -1,20 +1,12 @@
 use crate::engine::{Direction, SnakeEngine};
 use std::collections::{HashSet, VecDeque};
 
-const RELATIVE: [(Direction, Direction, Direction); 4] = [
-    // (straight, right, left) for each direction
-    (Direction::Up, Direction::Right, Direction::Left),       // UP
-    (Direction::Right, Direction::Down, Direction::Up),       // RIGHT
-    (Direction::Down, Direction::Left, Direction::Right),     // DOWN
-    (Direction::Left, Direction::Up, Direction::Down),        // LEFT
-];
-
 fn relative_dirs(dir: Direction) -> (Direction, Direction, Direction) {
     match dir {
-        Direction::Up => RELATIVE[0],
-        Direction::Right => RELATIVE[1],
-        Direction::Down => RELATIVE[2],
-        Direction::Left => RELATIVE[3],
+        Direction::Up => (Direction::Up, Direction::Right, Direction::Left),
+        Direction::Right => (Direction::Right, Direction::Down, Direction::Up),
+        Direction::Down => (Direction::Down, Direction::Left, Direction::Right),
+        Direction::Left => (Direction::Left, Direction::Up, Direction::Down),
     }
 }
 

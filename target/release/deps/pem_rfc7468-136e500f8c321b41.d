@@ -1,0 +1,12 @@
+/home/sms/code/rust_entrenador/target/release/deps/pem_rfc7468-136e500f8c321b41.d: /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md
+
+/home/sms/code/rust_entrenador/target/release/deps/libpem_rfc7468-136e500f8c321b41.rlib: /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md
+
+/home/sms/code/rust_entrenador/target/release/deps/libpem_rfc7468-136e500f8c321b41.rmeta: /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs /home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md
+
+/home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs:
+/home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs:
+/home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs:
+/home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs:
+/home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs:
+/home/sms/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md:

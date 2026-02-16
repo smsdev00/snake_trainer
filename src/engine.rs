@@ -1,4 +1,5 @@
 use rand::Rng;
+use std::collections::{HashSet, VecDeque};
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum Direction {
@@ -105,8 +106,36 @@ impl SnakeEngine {
                 reward = -10.0;
             } else {
                 let new_head = self.snake[0];
-                let new_dist = (new_head.x - self.food.x).abs() + (new_head.y - self.food.y).abs();
-                reward = if new_dist < prev_dist { 1.0 } else { -1.0 };
+                let new_dist =
+                    (new_head.x - self.food.x).abs() + (new_head.y - self.food.y).abs();
+                let approach = if new_dist < prev_dist { 1.0 } else { -1.0 };
+
+                // Preventive reward shaping (only kicks in when snake is big enough to matter)
+                let snake_len = self.snake.len() as f32;
+                let area = (self.grid_size * self.grid_size) as f32;
+
+                let safety_bonus = if snake_len > area * 0.15 {
+                    let reachable = self.flood_fill_from_head() as f32;
+                    let _free = area - snake_len;
+
+                    // Penalize if reachable space < snake length (trapped, can't fit)
+                    let space_penalty = if reachable < snake_len {
+                        -2.0
+                    } else if reachable < snake_len * 1.5 {
+                        -0.5
+                    } else {
+                        0.0
+                    };
+
+                    // Bonus for maintaining access to tail
+                    let tail_bonus = if self.can_reach_tail() { 0.5 } else { -1.0 };
+
+                    space_penalty + tail_bonus
+                } else {
+                    0.0
+                };
+
+                reward = approach + safety_bonus;
             }
         }
 
@@ -151,6 +180,69 @@ impl SnakeEngine {
         } else {
             self.snake.pop();
         }
+    }
+
+    fn flood_fill_from_head(&self) -> u32 {
+        let gs = self.grid_size;
+        let head = self.snake[0];
+        let occupied: HashSet<(i32, i32)> = self.snake.iter().map(|s| (s.x, s.y)).collect();
+        let mut visited = HashSet::new();
+        let mut queue = VecDeque::new();
+        visited.insert((head.x, head.y));
+        queue.push_back((head.x, head.y));
+        let mut count = 0u32;
+
+        while let Some((x, y)) = queue.pop_front() {
+            count += 1;
+            for &(dx, dy) in &[(0i32, -1i32), (1, 0), (0, 1), (-1, 0)] {
+                let nx = x + dx;
+                let ny = y + dy;
+                if nx >= 0 && nx < gs && ny >= 0 && ny < gs
+                    && !occupied.contains(&(nx, ny))
+                    && !visited.contains(&(nx, ny))
+                {
+                    visited.insert((nx, ny));
+                    queue.push_back((nx, ny));
+                }
+            }
+        }
+
+        count
+    }
+
+    /// BFS from head to tail (tail cell is walkable since it moves away)
+    fn can_reach_tail(&self) -> bool {
+        let gs = self.grid_size;
+        let head = self.snake[0];
+        let tail = self.snake[self.snake.len() - 1];
+
+        // Occupied = all body EXCEPT tail (tail will move, so it's reachable)
+        let mut occupied: HashSet<(i32, i32)> = self.snake.iter().map(|s| (s.x, s.y)).collect();
+        occupied.remove(&(tail.x, tail.y));
+
+        let mut visited = HashSet::new();
+        let mut queue = VecDeque::new();
+        visited.insert((head.x, head.y));
+        queue.push_back((head.x, head.y));
+
+        while let Some((x, y)) = queue.pop_front() {
+            for &(dx, dy) in &[(0i32, -1i32), (1, 0), (0, 1), (-1, 0)] {
+                let nx = x + dx;
+                let ny = y + dy;
+                if nx == tail.x && ny == tail.y {
+                    return true;
+                }
+                if nx >= 0 && nx < gs && ny >= 0 && ny < gs
+                    && !occupied.contains(&(nx, ny))
+                    && !visited.contains(&(nx, ny))
+                {
+                    visited.insert((nx, ny));
+                    queue.push_back((nx, ny));
+                }
+            }
+        }
+
+        false
     }
 
     fn spawn_food(&self) -> Point {

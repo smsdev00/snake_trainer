@@ -20,11 +20,14 @@ pub struct DQNAgent {
     pub epsilon: f32,
     pub epsilon_min: f32,
     pub epsilon_decay: f32,
+    // LR decay
     pub learning_rate: f32,
-    target_update_every: u64,
+    lr_min: f32,
+    lr_decay: f32,
+    // Soft target update
+    tau: f32,
     train_every: u64,
     step_count: u64,
-    episodes_since_target_update: u64,
 }
 
 impl DQNAgent {
@@ -42,10 +45,11 @@ impl DQNAgent {
             epsilon_min: 0.01,
             epsilon_decay: 0.998,
             learning_rate: 0.001,
-            target_update_every: 20,
+            lr_min: 0.0001,
+            lr_decay: 0.999995,
+            tau: 0.001,
             train_every: 4,
             step_count: 0,
-            episodes_since_target_update: 0,
         }
     }
 
@@ -94,7 +98,6 @@ impl DQNAgent {
         let mut rng = rand::thread_rng();
         let buf_len = self.replay_buffer.len();
 
-        // Uniform random sampling
         let indices: Vec<usize> = (0..self.batch_size)
             .map(|_| rng.gen_range(0..buf_len))
             .collect();
@@ -109,7 +112,10 @@ impl DQNAgent {
             .collect();
 
         let current_qs = self.network.predict_batch(&states);
-        let next_qs = self.target_network.predict_batch(&next_states);
+
+        // Double DQN: main network selects action, target network evaluates
+        let main_next_qs = self.network.predict_batch(&next_states);
+        let target_next_qs = self.target_network.predict_batch(&next_states);
 
         let mut targets: Vec<Vec<f32>> = current_qs.iter().map(|q| q.to_vec()).collect();
 
@@ -118,25 +124,35 @@ impl DQNAgent {
             targets[idx][exp.action] = if exp.done {
                 exp.reward
             } else {
-                let max_next = next_qs[idx]
+                // Main network picks best action
+                let best_action = main_next_qs[idx]
                     .iter()
-                    .cloned()
-                    .fold(f32::NEG_INFINITY, f32::max);
-                exp.reward + self.gamma * max_next
+                    .enumerate()
+                    .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+                    .unwrap()
+                    .0;
+                // Target network evaluates that action's value
+                exp.reward + self.gamma * target_next_qs[idx][best_action]
             };
         }
 
         self.network
             .train_batch(&states, &targets, self.learning_rate);
+
+        // Soft target update (Polyak averaging)
+        self.network.soft_update_into(&mut self.target_network, self.tau);
+
+        // LR decay
+        if self.learning_rate > self.lr_min {
+            self.learning_rate *= self.lr_decay;
+            if self.learning_rate < self.lr_min {
+                self.learning_rate = self.lr_min;
+            }
+        }
     }
 
     pub fn end_episode(&mut self) {
         self.decay_epsilon();
-        self.episodes_since_target_update += 1;
-        if self.episodes_since_target_update >= self.target_update_every {
-            self.target_network = self.network.clone_weights();
-            self.episodes_since_target_update = 0;
-        }
     }
 
     fn decay_epsilon(&mut self) {

@@ -145,14 +145,14 @@ fn main() {
 
     println!("=== Snake DQN Trainer (Rust) ===");
     println!(
-        "Grid: {}x{} | MLP 28→256→64→4 | Episodes: {} | gamma=0.99 eps_decay=0.998",
+        "Grid: {}x{} | MLP 28→256→64→4 | Episodes: {} | DoubleDQN soft_tau=0.001 LR_decay",
         GRID_SIZE, GRID_SIZE, num_episodes
     );
     println!(
-        "{:<10} {:<8} {:<8} {:<10} {:<10} {:<8} {:<10}",
-        "Episode", "Score", "Max", "Avg(100)", "Epsilon", "Buffer", "Time"
+        "{:<10} {:<8} {:<8} {:<10} {:<10} {:<10} {:<8} {:<10}",
+        "Episode", "Score", "Max", "Avg(100)", "Epsilon", "LR", "Buffer", "Time"
     );
-    println!("{}", "-".repeat(68));
+    println!("{}", "-".repeat(78));
 
     for episode in 1..=num_episodes {
         engine.reset();
@@ -201,12 +201,13 @@ fn main() {
             let mins = elapsed / 60;
             let secs = elapsed % 60;
             println!(
-                "{:<10} {:<8} {:<8} {:<10.1} {:<10.4} {:<8} {:02}:{:02}",
+                "{:<10} {:<8} {:<8} {:<10.1} {:<10.4} {:<10.6} {:<8} {:02}:{:02}",
                 episode,
                 score,
                 max_score,
                 avg,
                 agent.epsilon,
+                agent.learning_rate,
                 agent.buffer_len(),
                 mins,
                 secs

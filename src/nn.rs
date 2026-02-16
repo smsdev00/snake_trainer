@@ -189,6 +189,18 @@ impl Network {
         self.layers[0].adam_update(&gw0, &gb0, lr, self.t);
     }
 
+    /// Polyak soft update: target = (1-tau)*target + tau*self
+    pub fn soft_update_into(&self, target: &mut Network, tau: f32) {
+        for (src, dst) in self.layers.iter().zip(target.layers.iter_mut()) {
+            for (s, d) in src.weights.iter().zip(dst.weights.iter_mut()) {
+                *d = (1.0 - tau) * *d + tau * *s;
+            }
+            for (s, d) in src.biases.iter().zip(dst.biases.iter_mut()) {
+                *d = (1.0 - tau) * *d + tau * *s;
+            }
+        }
+    }
+
     pub fn clone_weights(&self) -> Self {
         Network {
             layers: self
